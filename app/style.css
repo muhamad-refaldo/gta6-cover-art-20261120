@@ -1,12 +1,242 @@
-html, body { margin: 0; height: 100%; background: #f2f0f4; color: #1d1b22; font: 15px/1.4 system-ui, sans-serif; }
-.app { display: flex; gap: 32px; align-items: center; justify-content: center; height: 100%; padding: 24px; box-sizing: border-box; }
-.controls { display: flex; flex-direction: column; gap: 14px; width: 280px; }
-.controls h1 { margin: 0; font-size: 28px; }
-.controls p { margin: 0; color: #5c5866; }
-label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
-input[type=text] { font: inherit; padding: 8px; border: 1px solid #c9c4d1; border-radius: 6px; }
-button { font: inherit; font-weight: 700; padding: 10px; border: 0; border-radius: 6px; background: #1d1b22; color: #fff; cursor: pointer; }
-canvas { width: min(70vh, 60vw); height: min(70vh, 60vw); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
-body.shot-cover .controls { display: none; }
-body.shot-cover .app { padding: 0; }
-body.shot-cover canvas { width: 100vw; height: 100vh; box-shadow: none; }
+/* Vice Cover Studio — editor styling. Dark room, neon accents, the cover itself
+   is the brightest thing on the page. */
+
+@font-face {
+  font-family: 'Anton';
+  src: url('../fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #0d0d12;
+  --panel: #17171f;
+  --panel-2: #1e1e28;
+  --line: #2a2a38;
+  --text: #f2f2f5;
+  --muted: #9a9ab0;
+  --accent: #ffb347;
+  --accent-2: #00e5ff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+header {
+  padding: 18px 24px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+header h1 {
+  margin: 0;
+  font-family: 'Anton', "Arial Black", sans-serif;
+  font-size: 30px;
+  letter-spacing: 1px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+header h1 span { color: var(--accent); }
+
+header p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 20px;
+  padding: 20px 24px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; }
+}
+
+.preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+#preview {
+  max-width: 100%;
+  max-height: 72vh;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  cursor: grab;
+  touch-action: none;
+  background: #000;
+}
+
+#preview:active { cursor: grabbing; }
+
+#panel-label {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+  min-height: 18px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+section h2 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.button-row button {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.button-row button:hover { border-color: var(--accent); }
+
+.button-row button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #161616;
+  font-weight: 700;
+}
+
+#grade-buttons button.active { background: var(--accent-2); border-color: var(--accent-2); }
+
+label.field {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+label.field input[type="text"] {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 9px 11px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 15px;
+}
+
+label.field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.slider-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 52px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.slider-row output { text-align: right; color: var(--text); font-variant-numeric: tabular-nums; }
+
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+.photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.photo-actions button,
+.export-actions button {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 13px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.photo-actions button:hover,
+.export-actions button:hover { border-color: var(--accent); }
+
+.export-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.export-actions button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #161616;
+  font-weight: 700;
+  flex: 1;
+}
+
+.export-actions button.primary:hover { filter: brightness(1.08); }
+
+.hint { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(20px);
+  background: #22222e;
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 10px 18px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  font-size: 14px;
+}
+
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+footer {
+  padding: 0 24px 24px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}

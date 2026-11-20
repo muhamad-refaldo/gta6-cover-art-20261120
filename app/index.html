@@ -1,23 +1,98 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
-<link rel="stylesheet" href="./style.css">
+<title>Vice Cover Studio — make your own GTA-style cover art</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
-  </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+<header>
+  <h1>VICE COVER <span>STUDIO</span></h1>
+  <p>Turn your photo and a caption into poster-style cover art. Pick a layout, drop in photos, write the caption, export a PNG to share.</p>
+</header>
+
+<main>
+  <div class="preview-wrap">
+    <canvas id="preview" width="1080" height="1080" aria-label="Live cover preview"></canvas>
+    <p id="panel-label">Loading samples…</p>
+  </div>
+
+  <div class="controls">
+    <section>
+      <h2>1 · Layout</h2>
+      <div class="button-row" id="layout-buttons"></div>
+      <p class="hint">Click a panel on the cover to edit it. Drag a photo to move it inside its panel.</p>
+    </section>
+
+    <section>
+      <h2>2 · Photo</h2>
+      <div class="photo-actions">
+        <input type="file" id="photo-file" accept="image/*" hidden>
+        <button type="button" onclick="document.getElementById('photo-file').click()">Load photo into selected panel</button>
+        <button type="button" id="fill-all">Use this photo in every panel</button>
+        <button type="button" id="sample-pier">Sample: Pier</button>
+        <button type="button" id="sample-boulevard">Sample: Boulevard</button>
+      </div>
+      <div class="slider-row">
+        <label for="zoom">Zoom</label>
+        <input type="range" id="zoom" min="1" max="3" step="0.01" value="1">
+        <output id="zoom-val">100%</output>
+      </div>
+      <div class="slider-row">
+        <label for="pan-x">Move left–right</label>
+        <input type="range" id="pan-x" min="-1" max="1" step="0.01" value="0">
+        <output id="pan-x-val">0.00</output>
+      </div>
+      <div class="slider-row">
+        <label for="pan-y">Move up–down</label>
+        <input type="range" id="pan-y" min="-1" max="1" step="0.01" value="0">
+        <output id="pan-y-val">0.00</output>
+      </div>
+    </section>
+
+    <section>
+      <h2>3 · Caption</h2>
+      <label class="field">Title
+        <input type="text" id="title-input" value="SUNSET HEIST" maxlength="60" autocomplete="off">
+      </label>
+      <label class="field">Subtitle
+        <input type="text" id="subtitle-input" value="ONE LAST JOB" maxlength="60" autocomplete="off">
+      </label>
+      <div class="slider-row">
+        <label for="title-size">Title size</label>
+        <input type="range" id="title-size" min="0.6" max="1.5" step="0.01" value="1">
+        <output id="title-size-val">100%</output>
+      </div>
+      <div class="button-row" id="caption-pos-buttons"></div>
+      <p class="hint">Text colour</p>
+      <div class="button-row" id="color-buttons"></div>
+    </section>
+
+    <section>
+      <h2>4 · Colour grade</h2>
+      <div class="button-row" id="grade-buttons"></div>
+      <p class="hint">Sunset is warm orange-pink, Neon is purple-cyan, Noir is hard black-and-white.</p>
+    </section>
+
+    <section>
+      <h2>5 · Size &amp; export</h2>
+      <div class="button-row" id="size-buttons"></div>
+      <div class="export-actions" style="margin-top:12px">
+        <button type="button" class="primary" id="export-png">Export PNG</button>
+        <button type="button" id="export-all">Export all 3 sizes</button>
+      </div>
+      <p class="hint">Exports the cover at full size: 1080 × 1080, 1080 × 1350, or 1920 × 1080. Your photos never leave this machine.</p>
+    </section>
+  </div>
 </main>
-<script type="module" src="./src/main.js"></script>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  Vice Cover Studio — an original cover maker. No Rockstar Games logos, artwork, characters, or fonts. Title font Anton (SIL Open Font License), shipped under app/fonts.
+</footer>
+
+<script type="module" src="src/editor.js"></script>
 </body>
 </html>
